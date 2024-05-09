@@ -5,4 +5,6 @@
  *      Author: yunus
  */
 
+#include "SubSys_WirelessCom_Config.h"
+
 
