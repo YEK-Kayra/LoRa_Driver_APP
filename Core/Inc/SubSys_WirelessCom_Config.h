@@ -13,8 +13,23 @@
 ******************************************************************************/
 #include "main.h"
 
+
 /******************************************************************************
-         				#### WIRELESSCOM INCLUDES ENUMS ####
+         				#### WIRELESSCOM ADDRESS DEFINATIONS ####
+******************************************************************************/
+#define add_ADDH 		 0x00
+#define add_ADDL 		 0x01
+#define add_REG0 		 0x02
+#define add_REG1 		 0x03
+#define add_REG2 		 0x04
+#define add_REG3 		 0x05
+#define add_REG_CRYPT_H  0x06
+#define add_REG_CRYPT_L	 0x07
+
+
+
+/******************************************************************************
+         				#### WIRELESSCOM ENUMS ####
 ******************************************************************************/
 typedef enum{
 
@@ -36,14 +51,13 @@ typedef enum{
 
 typedef enum{
 
-	Air_Data_Rate_2d_4k,   //d is dot as meaning
+	/*! "d" is dot as meaning */
+	Air_Data_Rate_2d_4k,
 	//keep going on
-
 }dev_Air_Data_Rate;
 
 
 typedef enum{
-
 	bytes_200,
 	bytes_128,
 	//keep going on
@@ -58,10 +72,8 @@ typedef enum{
 
 
 typedef enum{
-
 	Transparent,
 	Fixed_t
-
 }dev_Transmission_Method;
 
 
@@ -76,6 +88,18 @@ typedef enum{
 	ms1000,
 	//keep going on
 }dev_WOR_Cycle;
+
+typedef enum{
+	NormalMode, 		/*! UART and wireless channel areopen, transparent transmission is on */
+	WORsending,			/*!WOR Transmitter (it sends packet in every period)*/
+	WORreceiving,		/*!WOR Receiver (it sends packet in every period)*/
+	DeepSleep			/*! Module goes to sleep (automatically wake up when configuring parameters*/
+}dev_Mode_Switch;
+
+typedef enum{
+	writeCmnd = 0xC1,
+	readCmnd  = 0xC2
+}dev_Command;
 
 /******************************************************************************
          				#### WIRELESSCOM INCLUDES STRUCTURES ####
@@ -103,7 +127,8 @@ typedef struct Wirelesscom_Params_t{
 	dev_WOR_Cycle WorCycle;
 
 
-	//dev_Mode_Switch Mode_SW;
+	dev_Mode_Switch Mode_SW;
+
 
 }Wirelesscom_Params_t;
 
@@ -113,23 +138,30 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 	/*! Inner structs */
 	Wirelesscom_Params_t param;
 
-	/*! System interfaces */
+	/*! System Peripheral interfaces */
 	UART_HandleTypeDef *huart;
 	DMA_HandleTypeDef  *hdma_usart;
+	GPIO_TypeDef* GPIOx;
 
-	/*! For ADDRESS REG HIGH & LOW Byte */
-	uint8_t 	ADDH;
-	uint8_t     ADDL;
+	/*! Lora M0 and M1 control pins*/
+	uint16_t LORA_PIN_M0;
+	uint16_t LORA_PIN_M1;
 
-	/*! Parameter registers */
+/*!**		REGISTER VARIABLES		**!*/
+
+	/*! For PARAMETER REG Bytes */
 	uint8_t     REG0; /* UART Serial Port Rate || Parity Bit || Air Data Rate */
 	uint8_t     REG1; /* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
 	uint8_t     REG2; /* Channel  */
 	uint8_t     REG3; /* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
 
-	/*For CRYPTO REG HIGH & LOW Byte*/
+	/*For CRYPTO REG HIGH & LOW Bytes */
 	uint8_t   	REG_CRYPT_H;
 	uint8_t   	REG_CRYPT_L;
+
+	/*! For ADDRESS REG HIGH & LOW Bytes */
+	uint8_t 	ADDH;
+	uint8_t     ADDL;
 
 
 }WirelesscomConfig_HandleTypeDef;
