@@ -17,6 +17,7 @@
 /******************************************************************************
          				#### WIRELESSCOM ADDRESS DEFINATIONS ####
 ******************************************************************************/
+/*
 #define add_ADDH 		 0x00
 #define add_ADDL 		 0x01
 #define add_REG0 		 0x02
@@ -25,8 +26,8 @@
 #define add_REG3 		 0x05
 #define add_REG_CRYPT_H  0x06
 #define add_REG_CRYPT_L	 0x07
-
-
+*/
+#define BaseAddress		 0x00
 
 /******************************************************************************
          				#### WIRELESSCOM ENUMS ####
@@ -126,10 +127,6 @@ typedef struct Wirelesscom_Params_t{
 	dev_SwithStatus LBT_SW;
 	dev_WOR_Cycle WorCycle;
 
-
-	dev_Mode_Switch Mode_SW;
-
-
 }Wirelesscom_Params_t;
 
 
@@ -146,6 +143,9 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 	/*! Lora M0 and M1 control pins*/
 	uint16_t LORA_PIN_M0;
 	uint16_t LORA_PIN_M1;
+
+	/*! Normal,WOR,Sleep mode swtich*/
+	dev_Mode_Switch Mode_SW;
 
 /*!**		REGISTER VARIABLES		**!*/
 
