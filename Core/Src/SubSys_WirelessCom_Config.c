@@ -11,11 +11,24 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 	/*! Upload selected mode */
 	SubSys_WirelessCom_Config_CNFG_MODE(dev);
 
-	dev->param.SerialPortRate = UART_Rate_is_1200;
-	dev->param.AirDataRate    = Air_Data_Rate_2d_4k;
-	/*Keep going on , write other parameters*/
+	/*! Select parameters */
+	dev->param.SerialPortRate 		= UART_Rate_is_1200;
+	dev->param.ParityBit 			= p8N1;
+	dev->param.AirDataRate    		= Air_Data_Rate_2d_4k;
+
+	dev->param.SubPacket 			= bytes_200;
+	dev->param.AmbientNoise_SW 		= EnableFea;
+	dev->param.TX_Power 			= dBm30;
+
+	dev->param.dev_Channel 			= 0x12;
+
+	dev->param.LBT_SW 				= EnableFea;
+	dev->param.TransmissionMethod 	= Fixed_t ;
+	dev->param.RSSIByte_SW 			= EnableFea ;
+	dev->param.WorCycle 			= ms500;
 
 
+	/*! Save parameters into the "dev" object */
 	dev->ADDH = 0xCC;
 	dev->ADDL = 0xCC;
 	dev->REG0 = ((dev->param.SerialPortRate << 5) | (dev->param.ParityBit  << 3) | (dev->param.AirDataRate  << 0));
@@ -33,21 +46,22 @@ void SubSys_WirelessCom_Config_SET_REG(WirelesscomConfig_HandleTypeDef   *dev){
 	uint8_t cnt = 0;
 
 	/*! Save register variables into the ParamsLora array for sending lora chip at once*/
-	ParamsLora[cnt] = writeCmnd; 			cnt++;
-	ParamsLora[cnt] = BaseAddress; 			cnt++;
-	ParamsLora[cnt] = sizeof(ParamsLora); 	cnt++;
-	ParamsLora[cnt] = dev->ADDH ; 			cnt++;
-	ParamsLora[cnt] = dev->ADDL; 			cnt++;
-	ParamsLora[cnt] = dev->REG0; 			cnt++;
+	ParamsLora[cnt] = writeCmnd; 			cnt++;		/* Command name */
+	ParamsLora[cnt] = BaseAddress; 			cnt++;		/* Starting addres */
+	ParamsLora[cnt] = sizeof(ParamsLora); 	cnt++; 		/* Size of written bytes */
+	ParamsLora[cnt] = dev->ADDH ; 			cnt++; 		/* Addres High byte*/
+	ParamsLora[cnt] = dev->ADDL; 			cnt++;		/* Addres Low byte */
+	ParamsLora[cnt] = dev->REG0; 			cnt++;		/* Parameter register values*/
 	ParamsLora[cnt] = dev->REG1; 			cnt++;
 	ParamsLora[cnt] = dev->REG2; 			cnt++;
 	ParamsLora[cnt] = dev->REG3; 			cnt++;
 	ParamsLora[cnt] = dev->REG_CRYPT_H; 	cnt++;
 	ParamsLora[cnt] = dev->REG_CRYPT_L; 	cnt++;
 
-	HAL_UART_Transmit_DMA(huart, pData, Size)
-	HAL_UART_Transmit(huart, pData, Size, Timeout)
-	HAL_UARTEx_ReceiveToIdle_DMA();
+
+HAL_UART_Receive_DMA(dev->huart, ParamsLora, sizeof(ParamsLora));
+
+HAL_UART_Receive_DMA(dev->huart, pData, Size)
 }
 
 

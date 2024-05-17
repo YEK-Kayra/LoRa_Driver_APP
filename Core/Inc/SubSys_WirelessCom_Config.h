@@ -17,17 +17,8 @@
 /******************************************************************************
          				#### WIRELESSCOM ADDRESS DEFINATIONS ####
 ******************************************************************************/
-/*
-#define add_ADDH 		 0x00
-#define add_ADDL 		 0x01
-#define add_REG0 		 0x02
-#define add_REG1 		 0x03
-#define add_REG2 		 0x04
-#define add_REG3 		 0x05
-#define add_REG_CRYPT_H  0x06
-#define add_REG_CRYPT_L	 0x07
-*/
-#define BaseAddress		 0x00
+
+#define REG_BaseAddress	 0x00
 
 /******************************************************************************
          				#### WIRELESSCOM ENUMS ####
@@ -92,8 +83,8 @@ typedef enum{
 
 typedef enum{
 	NormalMode, 		/*! UART and wireless channel areopen, transparent transmission is on */
-	WORsending,			/*!WOR Transmitter (it sends packet in every period)*/
-	WORreceiving,		/*!WOR Receiver (it sends packet in every period)*/
+	WORsending,			/*! WOR Transmitter (it sends packet in every period)*/
+	WORreceiving,		/*! WOR Receiver (it sends packet in every period)*/
 	DeepSleep			/*! Module goes to sleep (automatically wake up when configuring parameters*/
 }dev_Mode_Switch;
 
@@ -140,29 +131,26 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 	DMA_HandleTypeDef  *hdma_usart;
 	GPIO_TypeDef* GPIOx;
 
-	/*! Lora M0 and M1 control pins*/
+	/**
+	 * Lora M0 and M1 control pins and Normal, WOR, Sleep mode swtich
+	 */
 	uint16_t LORA_PIN_M0;
 	uint16_t LORA_PIN_M1;
-
-	/*! Normal,WOR,Sleep mode swtich*/
 	dev_Mode_Switch Mode_SW;
 
-/*!**		REGISTER VARIABLES		**!*/
 
+/*!**		REGISTER VARIABLES		**!*/
 	/*! For PARAMETER REG Bytes */
 	uint8_t     REG0; /* UART Serial Port Rate || Parity Bit || Air Data Rate */
 	uint8_t     REG1; /* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
 	uint8_t     REG2; /* Channel  */
 	uint8_t     REG3; /* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
-
 	/*For CRYPTO REG HIGH & LOW Bytes */
 	uint8_t   	REG_CRYPT_H;
 	uint8_t   	REG_CRYPT_L;
-
 	/*! For ADDRESS REG HIGH & LOW Bytes */
 	uint8_t 	ADDH;
 	uint8_t     ADDL;
-
 
 }WirelesscomConfig_HandleTypeDef;
 
