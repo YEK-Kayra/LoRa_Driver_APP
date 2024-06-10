@@ -121,15 +121,19 @@ typedef struct Wirelesscom_Params_t{
 }Wirelesscom_Params_t;
 
 
+typedef struct dev_interfaces_t{
+
+	/*! System Peripheral interfaces */
+	UART_HandleTypeDef *huart;
+	GPIO_TypeDef* GPIOx;
+
+}dev_interfaces_t;
+
 typedef struct WirelesscomConfig_HandleTypeDef{
 
 	/*! Inner structs */
 	Wirelesscom_Params_t param;
-
-	/*! System Peripheral interfaces */
-	UART_HandleTypeDef *huart;
-	DMA_HandleTypeDef  *hdma_usart;
-	GPIO_TypeDef* GPIOx;
+	dev_interfaces_t 	 interface;
 
 	/**
 	 * Lora M0 and M1 control pins and Normal, WOR, Sleep mode swtich
@@ -192,7 +196,7 @@ void SubSys_WirelessCom_Config_READ_REG(WirelesscomConfig_HandleTypeDef  *dev);
   * @param
   * @retval
   */
-void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev);
+void SubSys_WirelessCom_Config_WORK_MODE(WirelesscomConfig_HandleTypeDef    *dev);
 
 
 

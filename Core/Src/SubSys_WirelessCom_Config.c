@@ -1,8 +1,9 @@
 #include "SubSys_WirelessCom_Config.h"
 #include "SubSys_WirelessCom_App.h"
-
+#include "string.h"
 /*! Is filled by lora's parameter variables at SubSys_WirelessCom_Config_Init function*/
-uint8_t ParamsLora[11];
+uint8_t ParamsLoraToBeSend[11];
+uint8_t ParamsLoraToBeGet[11];
 
 void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 
@@ -43,34 +44,58 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 
 void SubSys_WirelessCom_Config_SET_REG(WirelesscomConfig_HandleTypeDef   *dev){
 
-	uint8_t cnt = 0;
+	uint16_t cnt = 0;
 
-	/*! Save register variables into the ParamsLora array for sending lora chip at once*/
-	ParamsLora[cnt] = writeCmnd; 			cnt++;		/* Command name */
-	ParamsLora[cnt] = BaseAddress; 			cnt++;		/* Starting addres */
-	ParamsLora[cnt] = sizeof(ParamsLora); 	cnt++; 		/* Size of written bytes */
-	ParamsLora[cnt] = dev->ADDH ; 			cnt++; 		/* Addres High byte*/
-	ParamsLora[cnt] = dev->ADDL; 			cnt++;		/* Addres Low byte */
-	ParamsLora[cnt] = dev->REG0; 			cnt++;		/* Parameter register values*/
-	ParamsLora[cnt] = dev->REG1; 			cnt++;
-	ParamsLora[cnt] = dev->REG2; 			cnt++;
-	ParamsLora[cnt] = dev->REG3; 			cnt++;
-	ParamsLora[cnt] = dev->REG_CRYPT_H; 	cnt++;
-	ParamsLora[cnt] = dev->REG_CRYPT_L; 	cnt++;
+	/*! Save register variables into the ParamsLoraToBeSend array for sending lora chip at once*/
+	ParamsLoraToBeSend[cnt] = writeCmnd; 					cnt++;		/* Command name */
+	ParamsLoraToBeSend[cnt] = REG_BaseAddress; 				cnt++;		/* Starting addres */
+	ParamsLoraToBeSend[cnt] = sizeof(ParamsLoraToBeSend); 	cnt++; 		/* Size of written bytes */
+	ParamsLoraToBeSend[cnt] = dev->ADDH ; 					cnt++; 		/* Addres High byte*/
+	ParamsLoraToBeSend[cnt] = dev->ADDL; 					cnt++;		/* Addres Low byte */
+	ParamsLoraToBeSend[cnt] = dev->REG0; 					cnt++;		/* Parameter register values*/
+	ParamsLoraToBeSend[cnt] = dev->REG1; 					cnt++;
+	ParamsLoraToBeSend[cnt] = dev->REG2; 					cnt++;
+	ParamsLoraToBeSend[cnt] = dev->REG3; 					cnt++;
+	ParamsLoraToBeSend[cnt] = dev->REG_CRYPT_H; 			cnt++;
+	ParamsLoraToBeSend[cnt] = dev->REG_CRYPT_L; 			cnt++;
 
+	/*! Write all the array's values into the LoRa's registers */
+	HAL_UART_Transmit_DMA(dev->interface.huart, ParamsLoraToBeSend, cnt);
 
-HAL_UART_Receive_DMA(dev->huart, ParamsLora, sizeof(ParamsLora));
-
-HAL_UART_Receive_DMA(dev->huart, pData, Size)
 }
 
 
 void SubSys_WirelessCom_Config_READ_REG(WirelesscomConfig_HandleTypeDef    *dev){
+	uint16_t cnt = 0;
+
+	ParamsLoraToBeSend[cnt] = readCmnd; 					cnt++;				/* Command name */
+	ParamsLoraToBeSend[cnt] = REG_BaseAddress; 				cnt++;				/* Starting addres */
+	ParamsLoraToBeSend[cnt] = sizeof(ParamsLoraToBeGet); 	cnt++; 				/* Size of written bytes */
+
+	/*! Send read command to get values from LoRa's chip */
+	HAL_UART_Transmit_DMA(dev->interface.huart, ParamsLoraToBeSend, cnt);
+	HAL_Delay(50);
+	HAL_UART_Receive_DMA(dev->interface.huart, ParamsLoraToBeGet, 11);  //$$ 11 diye sabit bir sayı konulmayacak, modüler yapılacak $$//
+
+	for(int i = 0 ; i <= 11 ; i++)										//$$ 11 diye sabit bir sayı konulmayacak, modüler yapılacak $$//
+	{
+
+		if(ParamsLoraToBeSend[i] != ParamsLoraToBeGet[i])
+		{
+			/*Stop the algorithm until solving the problem*/
+			while(1);
+		}
+		else
+		{
+			continue;
+		}
+
+	}
 
 }
 
 
-void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_WORK_MODE(WirelesscomConfig_HandleTypeDef    *dev){
 
 	/*! GPIO_PIN_X x can be change by user*/
 	dev->LORA_PIN_M0 = GPIO_PIN_13;
@@ -79,23 +104,23 @@ void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev
 	switch(dev->Mode_SW){
 
 		case NormalMode :	/*! UART and wireless channel areopen, transparent transmission is on */
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M1, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M0, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M0, GPIO_PIN_RESET);
 		break;
 
 		case WORsending :	/*!WOR Transmitter (it sends packet in every period)*/
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M1, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M0, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M0, GPIO_PIN_SET);
 		break;
 
 		case WORreceiving :	/*!WOR Receiver (it sends packet in every period)*/
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M1, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M0, GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M0, GPIO_PIN_RESET);
 		break;
 
 		case DeepSleep :	/*! Module goes to sleep (automatically wake up when configuring parameters*/
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M1, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(dev->GPIOx, dev->LORA_PIN_M0, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M0, GPIO_PIN_SET);
 		break;
 
 	}
