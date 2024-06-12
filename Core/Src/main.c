@@ -46,7 +46,14 @@ DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
-WirelesscomConfig_HandleTypeDef dev_WirelessComConfig;
+
+	/*! We create 2 object for subsystem wireless communication,
+	 * 	one of them is about configuration setting of wirelesscom device
+	 * 	other one is about application object
+	 */
+	SubSys_WirelesscomConfig_HandleTypeDef dev_WirelessComConfig;
+	SubSys_WirelessCom_APP_HandleTypeDef dev_WirelessComApp;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -94,7 +101,37 @@ int main(void)
   MX_DMA_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  SubSys_WirelessCom_Config_Init(&dev_WirelessComConfig);
+
+  /* WIRELESS COMMUNICATION INITIALIZE PART BEGIN*/
+
+		  /**
+		   * @brief : First of all, we upload initial settings into the Wireless com. device
+		   * 		  after that, we determine Target Address high and low byte and Target Channel.
+		   * @note  : If you use dma for receiving and transmiting, fill it parameters that
+		   * 		  come after channel info
+		   */
+		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_
+
+		  SubSys_WirelessCom_Config_Init(&dev_WirelessComConfig);
+
+		#endif
+
+
+		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_APP_H_
+
+		  /*! Will be filled for your dev that use now*/
+		  dev_WirelessComApp->huartX = &huart1;
+		  dev_WirelessComApp->hdma_usartX_rx = &hdma_usart1_rx;
+		  dev_WirelessComApp->hdma_usartX_tx = &hdma_usart1_tx;
+		  /*! Will be filled for the TARGET Device */
+		  dev_WirelessComApp->Target_ADDH = 0x14;
+		  dev_WirelessComApp->Target_ADDL = 0x53;
+		  dev_WirelessComApp->Target_Ch   = 0x22;
+
+		#endif
+  /* WIRELESS COMMUNICATION INITIALIZE PART END*/
+
+
 
   /* USER CODE END 2 */
 

@@ -1,12 +1,12 @@
-/*
- * SubSys_WirelessCom_Config.h
- *
- *  Created on: Apr 28, 2024
- *      Author: yunus
- */
 
-#ifndef INC_SUBSYS_WIRELESSCOM_CONFIG_H_
-#define INC_SUBSYS_WIRELESSCOM_CONFIG_H_
+
+/** !WARNING
+ * Satellite Carrier Unit's adress will be 0x1923  and channel is 0x11
+ * Satellite Payload Unit's adress will be 0x1453  and channel is 0x22
+ * Satellite Ground Station adress will be 0x1071  and channel is 0x33
+ */
+#ifndef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_
+#define SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_
 
 /******************************************************************************
          				#### WIRELESSCOM INCLUDES ####
@@ -118,8 +118,8 @@ typedef enum{
 
 typedef enum{
 
-	writeCmnd = 0xC1,
-	readCmnd  = 0xC2
+	writeCmnd = 0xC0,
+	readCmnd  = 0xC1
 
 }dev_Command;
 
@@ -189,7 +189,7 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 	uint8_t 	ADDH;
 	uint8_t     ADDL;
 
-}WirelesscomConfig_HandleTypeDef;
+}SubSys_WirelesscomConfig_HandleTypeDef;
 
 
 /******************************************************************************
@@ -202,7 +202,7 @@ typedef struct WirelesscomConfig_HandleTypeDef{
   * @param	*dev is an pointer that hold object address that create by user. All of configuration ops. is working by this pointer
   * @retval	currently empty
   */
-void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev);
+void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *dev);
 
 
 /**
@@ -211,7 +211,7 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev);
   * @param
   * @retval
   */
-void SubSys_WirelessCom_Config_SET_REG(WirelesscomConfig_HandleTypeDef   *dev);
+void SubSys_WirelessCom_Config_SET_REG(SubSys_WirelesscomConfig_HandleTypeDef   *dev);
 
 
 /**
@@ -220,7 +220,7 @@ void SubSys_WirelessCom_Config_SET_REG(WirelesscomConfig_HandleTypeDef   *dev);
   * @param
   * @retval
   */
-void SubSys_WirelessCom_Config_READ_REG(WirelesscomConfig_HandleTypeDef  *dev);
+void SubSys_WirelessCom_Config_READ_REG(SubSys_WirelesscomConfig_HandleTypeDef  *dev);
 
 
 /**
@@ -229,8 +229,8 @@ void SubSys_WirelessCom_Config_READ_REG(WirelesscomConfig_HandleTypeDef  *dev);
   * @param
   * @retval
   */
-void SubSys_WirelessCom_Config_WORK_MODE(WirelesscomConfig_HandleTypeDef    *dev);
+void SubSys_WirelessCom_Config_WORK_MODE(SubSys_WirelesscomConfig_HandleTypeDef   *dev);
 
 
 
-#endif /* INC_SUBSYS_WIRELESSCOM_CONFIG_H_ */
+#endif /* SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_ */

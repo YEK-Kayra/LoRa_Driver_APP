@@ -15,8 +15,8 @@
  * PLAN ŞU
  * değişkenleri sprintf ile bir karakter dizisine byte byte kaydetmen , o yüzden byte sayısını karakter sayısına göre ayarla
  */
-#ifndef INC_SUBSYS_WIRELESSCOM_APP_H_
-#define INC_SUBSYS_WIRELESSCOM_APP_H_
+#ifndef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_APP_H_
+#define SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_APP_H_
 /******************************************************************************
          				#### WIRELESSCOM INCLUDES ####
 ******************************************************************************/
@@ -27,6 +27,9 @@
          				#### WIRELESSCOM DEFINITIONS ####
 ******************************************************************************/
 
+/*! Packet size of the message that will be sending and receiving */
+#define SizeOf_Wireless_RX_Buff 	10		//Will be update
+#define SizeOf_Wireless_TX_Buff 	10		//Will be update
 
 
 /******************************************************************************
@@ -71,6 +74,7 @@ typedef struct{
 		char Carr_GPS_CompassWay_Latitude; 		/* Unit : char 		(1Byte) e.g => "E or W"   */
 
 
+
 	/***! Satellite Payload Unit Variables ***/
 
 		/*! Will be filled by MS5611 senso r*/
@@ -107,6 +111,7 @@ typedef struct{
 		 */
 		uint8_t SatelliteStat;			/* Unit : none 			(1Byte) e.g => "0,to,5" */
 
+
 		/**!! "ErrorCode" variable
 		 *
 		 * index information => |Satt. velocity is not range 12-14ms | (index 0)
@@ -116,6 +121,7 @@ typedef struct{
 		 * 						|Autonomous separation did not occur | (index 4)
 		 */
 		uint8_t ErrorCode;				/* Unit : none 			(5Byte) e.g => "11001" */
+
 
 		/**!! "PayloadRHRH" variable
 		 *	N is a number between 0-9 , L is a letter ( R(red) G(green) B(blue) N(nofilter) )
@@ -132,21 +138,22 @@ typedef struct{
 		/* Will be picked up from the ground station*/
 		float Station_IOTdata;			/* Unit : C°,celcius 	(4Byte) e.g => "22.5" 	*/
 
-}SubSys_WirelessCom_VariableTypeDef;
+		uint8_t Satellite_ManuelSep;
 
+}SubSys_WirelessCom_VariableTypeDef;
 
 typedef struct{
 
-	char RxBuf[SizeOf_Wireless_RX_Buff]; /*! Buffer for Telemetry Datas that receive from wirelesscom*/
-	char TxBuf[SizeOf_Wireless_TX_Buff]; /*! Buffer for Datas that send to Lora*/
+	char Rx[SizeOf_Wireless_RX_Buff]; /*! Buffer for Telemetry Datas that receive from wirelesscom*/
+	char Tx[SizeOf_Wireless_TX_Buff]; /*! Buffer for Datas that send to Lora*/
 
 }SubSys_WirelessCom_BufferTypeDef;
 
 typedef struct{
 
 	/*! Inner structs */
-	SubSys_WirelessCom_BufferTypeDef WirelessBuf;
-	SubSys_WirelessCom_VariableTypeDef	WirelessVar;
+	SubSys_WirelessCom_BufferTypeDef Buffer;
+	SubSys_WirelessCom_VariableTypeDef	Variable;
 
 	/*! Used device DMA and Usart interface settings */
 	UART_HandleTypeDef *huartX;
@@ -158,18 +165,17 @@ typedef struct{
 	uint8_t Target_ADDL;
 	uint8_t Target_Ch;
 
-	/*! Packet size of the message that will be sending and receiving */
-	uint8_t SizeOf_Wireless_RX_Buff;
-	uint8_t SizeOf_Wireless_TX_Buff;
+}SubSys_WirelessCom_APP_HandleTypeDef;
 
-
-}SubSys_WirelessCom_HandleTypeDef;
 
 
 
 /******************************************************************************
          				#### WIRELESSCOM PROTOTYPES OF FUNCTIONS ####
 ******************************************************************************/
+
+void SubSys_WirelessCom_Telemetry_Init(SubSys_WirelessCom_APP_HandleTypeDef *APPdev);
+
 void SubSys_WirelessCom_Telemetry_Transfer_From_To(MissionUnit From_X, MissionUnit To_Y);
 void SubSys_WirelessCom_Telemetry_Reception_From_To(MissionUnit From_X, MissionUnit To_Y);
 

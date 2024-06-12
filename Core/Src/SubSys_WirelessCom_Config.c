@@ -5,7 +5,7 @@
 uint8_t ParamsLoraToBeSend[11];
 uint8_t ParamsLoraToBeGet[11];
 
-void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *dev){
 
 
 
@@ -21,7 +21,8 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 	dev->param.AmbientNoise_SW 		= EnableFea;
 	dev->param.TX_Power 			= dBm30;
 
-	dev->param.dev_Channel 			= 0x12;
+	/**! device that you use now, its channel parameter*/
+	dev->param.dev_Channel 			= 0x11;
 
 	dev->param.LBT_SW 				= EnableFea;
 	dev->param.TransmissionMethod 	= Fixed_t ;
@@ -30,8 +31,10 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 
 
 	/*! Save parameters into the "dev" object */
-	dev->ADDH = 0xCC;
-	dev->ADDL = 0xCC;
+
+	dev->ADDH = 0x19;	/*! device that you use now, its Address high parameter*/
+	dev->ADDL = 0x23;	/*! device that you use now, its Address low parameter*/
+
 	dev->REG0 = ((dev->param.SerialPortRate << 5) | (dev->param.ParityBit  << 3) | (dev->param.AirDataRate  << 0));
 	dev->REG1 = ((dev->param.SubPacket << 6) | (dev->param.AmbientNoise_SW  << 5) | (dev->param.TX_Power  << 0));
 	dev->REG2 = (dev->param.dev_Channel << 0);
@@ -42,7 +45,7 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 }
 
 
-void SubSys_WirelessCom_Config_SET_REG(WirelesscomConfig_HandleTypeDef   *dev){
+void SubSys_WirelessCom_Config_SET_REG(SubSys_WirelesscomConfig_HandleTypeDef   *dev){
 
 	uint16_t cnt = 0;
 
@@ -65,7 +68,7 @@ void SubSys_WirelessCom_Config_SET_REG(WirelesscomConfig_HandleTypeDef   *dev){
 }
 
 
-void SubSys_WirelessCom_Config_READ_REG(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_READ_REG(SubSys_WirelesscomConfig_HandleTypeDef    *dev){
 	uint16_t cnt = 0;
 
 	ParamsLoraToBeSend[cnt] = readCmnd; 					cnt++;				/* Command name */
@@ -95,7 +98,7 @@ void SubSys_WirelessCom_Config_READ_REG(WirelesscomConfig_HandleTypeDef    *dev)
 }
 
 
-void SubSys_WirelessCom_Config_WORK_MODE(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_WORK_MODE(SubSys_WirelesscomConfig_HandleTypeDef    *dev){
 
 	/*! GPIO_PIN_X x can be change by user*/
 	dev->LORA_PIN_M0 = GPIO_PIN_13;

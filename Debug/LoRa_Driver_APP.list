@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  12 .comment      00000043  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   00009087  00000000  00000000  0002007f  2**0
+ 13 .debug_info   0000946a  00000000  00000000  0002007f  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00001826  00000000  00000000  00029106  2**0
+ 14 .debug_abbrev 00001826  00000000  00000000  000294e9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 000006f0  00000000  00000000  0002a930  2**3
+ 15 .debug_aranges 000006f0  00000000  00000000  0002ad10  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 0000054d  00000000  00000000  0002b020  2**0
+ 16 .debug_rnglists 0000054d  00000000  00000000  0002b400  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00001cc9  00000000  00000000  0002b56d  2**0
+ 17 .debug_macro  00001cdb  00000000  00000000  0002b94d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   000093ea  00000000  00000000  0002d236  2**0
+ 18 .debug_line   000093ea  00000000  00000000  0002d628  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000843f4  00000000  00000000  00036620  2**0
+ 19 .debug_str    000848a1  00000000  00000000  00036a12  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_frame  00001b10  00000000  00000000  000baa14  2**2
+ 20 .debug_frame  00001b10  00000000  00000000  000bb2b4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000006b  00000000  00000000  000bc524  2**0
+ 21 .debug_line_str 0000006b  00000000  00000000  000bcdc4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -357,7 +357,7 @@ Disassembly of section .text:
 uint8_t ParamsLoraToBeSend[11];
 uint8_t ParamsLoraToBeGet[11];
 
-void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *dev){
  80004d0:	b580      	push	{r7, lr}
  80004d2:	b082      	sub	sp, #8
  80004d4:	af00      	add	r7, sp, #0
@@ -519,7 +519,7 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 }
 
 
-void SubSys_WirelessCom_Config_WORK_MODE(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_WORK_MODE(SubSys_WirelesscomConfig_HandleTypeDef    *dev){
  80005c4:	b580      	push	{r7, lr}
  80005c6:	b082      	sub	sp, #8
  80005c8:	af00      	add	r7, sp, #0
@@ -671,6 +671,7 @@ int main(void)
   MX_USART1_UART_Init();
  80006a0:	f000 f870 	bl	8000784 <MX_USART1_UART_Init>
   /* USER CODE BEGIN 2 */
+
   SubSys_WirelessCom_Config_Init(&dev_WirelessComConfig);
  80006a4:	4801      	ldr	r0, [pc, #4]	; (80006ac <main+0x20>)
  80006a6:	f7ff ff13 	bl	80004d0 <SubSys_WirelessCom_Config_Init>
