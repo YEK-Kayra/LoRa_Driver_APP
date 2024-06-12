@@ -27,8 +27,13 @@
 typedef enum{
 
 	UART_Rate_is_1200,
-	UART_Rate_is_2400
-	//keep going on
+	UART_Rate_is_2400,
+	UART_Rate_is_4800,
+	UART_Rate_is_9600,
+	UART_Rate_is_19200,
+	UART_Rate_is_38400,
+	UART_Rate_is_57600,
+	UART_Rate_is_115200
 
 }dev_UART_Serial_Port_Rate;
 
@@ -37,30 +42,41 @@ typedef enum{
 
 	p8N1,
 	p8O1,
-	//keep going on
+	p8E1,
 
 }dev_Serial_Parity_Bit;
 
 
 typedef enum{
 
-	/*! "d" is dot as meaning */
-	Air_Data_Rate_2d_4k,
-	//keep going on
+	/*! "d" is a dot, "k" is kilo(1000) */
+	Air_Data_Rate_2d_4k = 0,
+	Air_Data_Rate_4d_8k = 3,
+	Air_Data_Rate_9d_6k,
+	Air_Data_Rate_19d_2k,
+	Air_Data_Rate_38d_4k,
+	Air_Data_Rate_62d_5k
+
 }dev_Air_Data_Rate;
 
 
 typedef enum{
+
 	bytes_200,
 	bytes_128,
-	//keep going on
+	bytes_64,
+	bytes_32
+
 }dev_SubPacket_Setting;
 
 
 typedef enum{
+
 	dBm30,
 	dBm27,
-	//keep going on
+	dbm24,
+	dbm21
+
 }dev_Transmitting_Power;
 
 
@@ -71,27 +87,40 @@ typedef enum{
 
 
 typedef enum{
+
 	DisableFea,
 	EnableFea
+
 }dev_SwithStatus;
 
 
 typedef enum{
+	/*! ms is milisecond */
 	ms500,
 	ms1000,
-	//keep going on
+	ms1500,
+	ms2000,
+	ms2500,
+	ms3000,
+	ms3500,
+	ms4000
+
 }dev_WOR_Cycle;
 
 typedef enum{
+
 	NormalMode, 		/*! UART and wireless channel areopen, transparent transmission is on */
 	WORsending,			/*! WOR Transmitter (it sends packet in every period)*/
 	WORreceiving,		/*! WOR Receiver (it sends packet in every period)*/
 	DeepSleep			/*! Module goes to sleep (automatically wake up when configuring parameters*/
+
 }dev_Mode_Switch;
 
 typedef enum{
+
 	writeCmnd = 0xC1,
 	readCmnd  = 0xC2
+
 }dev_Command;
 
 /******************************************************************************
@@ -145,14 +174,17 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 
 
 /*!**		REGISTER VARIABLES		**!*/
+
 	/*! For PARAMETER REG Bytes */
 	uint8_t     REG0; /* UART Serial Port Rate || Parity Bit || Air Data Rate */
 	uint8_t     REG1; /* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
 	uint8_t     REG2; /* Channel  */
 	uint8_t     REG3; /* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
+
 	/*For CRYPTO REG HIGH & LOW Bytes */
 	uint8_t   	REG_CRYPT_H;
 	uint8_t   	REG_CRYPT_L;
+
 	/*! For ADDRESS REG HIGH & LOW Bytes */
 	uint8_t 	ADDH;
 	uint8_t     ADDL;
@@ -161,7 +193,7 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 
 
 /******************************************************************************
-         				#### WIRELESSCOM PROTOTYPES OF FUNCTIONS ####
+         			#### WIRELESSCOM PROTOTYPES OF FUNCTIONS ####
 ******************************************************************************/
 
 /**
