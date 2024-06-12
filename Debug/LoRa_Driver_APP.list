@@ -366,9 +366,9 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 
 
 	/*! Upload selected mode */
-	SubSys_WirelessCom_Config_CNFG_MODE(dev);
+	SubSys_WirelessCom_Config_WORK_MODE(dev);
  80004d8:	6878      	ldr	r0, [r7, #4]
- 80004da:	f000 f873 	bl	80005c4 <SubSys_WirelessCom_Config_CNFG_MODE>
+ 80004da:	f000 f873 	bl	80005c4 <SubSys_WirelessCom_Config_WORK_MODE>
 
 	/*! Select parameters */
 	dev->param.SerialPortRate 		= UART_Rate_is_1200;
@@ -513,13 +513,13 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
  80005c0:	bd80      	pop	{r7, pc}
 	...
 
-080005c4 <SubSys_WirelessCom_Config_CNFG_MODE>:
+080005c4 <SubSys_WirelessCom_Config_WORK_MODE>:
 	}
 
 }
 
 
-void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev){
+void SubSys_WirelessCom_Config_WORK_MODE(WirelesscomConfig_HandleTypeDef    *dev){
  80005c4:	b580      	push	{r7, lr}
  80005c6:	b082      	sub	sp, #8
  80005c8:	af00      	add	r7, sp, #0
@@ -539,8 +539,8 @@ void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev
  80005dc:	687b      	ldr	r3, [r7, #4]
  80005de:	7e1b      	ldrb	r3, [r3, #24]
  80005e0:	2b03      	cmp	r3, #3
- 80005e2:	d84f      	bhi.n	8000684 <SubSys_WirelessCom_Config_CNFG_MODE+0xc0>
- 80005e4:	a201      	add	r2, pc, #4	; (adr r2, 80005ec <SubSys_WirelessCom_Config_CNFG_MODE+0x28>)
+ 80005e2:	d84f      	bhi.n	8000684 <SubSys_WirelessCom_Config_WORK_MODE+0xc0>
+ 80005e4:	a201      	add	r2, pc, #4	; (adr r2, 80005ec <SubSys_WirelessCom_Config_WORK_MODE+0x28>)
  80005e6:	f852 f023 	ldr.w	pc, [r2, r3, lsl #2]
  80005ea:	bf00      	nop
  80005ec:	080005fd 	.word	0x080005fd
@@ -566,7 +566,7 @@ void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev
  8000616:	4619      	mov	r1, r3
  8000618:	f001 f944 	bl	80018a4 <HAL_GPIO_WritePin>
 		break;
- 800061c:	e032      	b.n	8000684 <SubSys_WirelessCom_Config_CNFG_MODE+0xc0>
+ 800061c:	e032      	b.n	8000684 <SubSys_WirelessCom_Config_WORK_MODE+0xc0>
 
 		case WORsending :	/*!WOR Transmitter (it sends packet in every period)*/
 			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_RESET);
@@ -586,7 +586,7 @@ void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev
  8000638:	4619      	mov	r1, r3
  800063a:	f001 f933 	bl	80018a4 <HAL_GPIO_WritePin>
 		break;
- 800063e:	e021      	b.n	8000684 <SubSys_WirelessCom_Config_CNFG_MODE+0xc0>
+ 800063e:	e021      	b.n	8000684 <SubSys_WirelessCom_Config_WORK_MODE+0xc0>
 
 		case WORreceiving :	/*!WOR Receiver (it sends packet in every period)*/
 			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_SET);
@@ -606,7 +606,7 @@ void SubSys_WirelessCom_Config_CNFG_MODE(WirelesscomConfig_HandleTypeDef    *dev
  800065a:	4619      	mov	r1, r3
  800065c:	f001 f922 	bl	80018a4 <HAL_GPIO_WritePin>
 		break;
- 8000660:	e010      	b.n	8000684 <SubSys_WirelessCom_Config_CNFG_MODE+0xc0>
+ 8000660:	e010      	b.n	8000684 <SubSys_WirelessCom_Config_WORK_MODE+0xc0>
 
 		case DeepSleep :	/*! Module goes to sleep (automatically wake up when configuring parameters*/
 			HAL_GPIO_WritePin(dev->interface.GPIOx, dev->LORA_PIN_M1, GPIO_PIN_SET);
@@ -674,6 +674,7 @@ int main(void)
   SubSys_WirelessCom_Config_Init(&dev_WirelessComConfig);
  80006a4:	4801      	ldr	r0, [pc, #4]	; (80006ac <main+0x20>)
  80006a6:	f7ff ff13 	bl	80004d0 <SubSys_WirelessCom_Config_Init>
+
   /* USER CODE END 2 */
 
   /* Infinite loop */

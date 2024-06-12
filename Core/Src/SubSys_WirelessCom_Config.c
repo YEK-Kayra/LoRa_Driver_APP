@@ -10,7 +10,7 @@ void SubSys_WirelessCom_Config_Init(WirelesscomConfig_HandleTypeDef    *dev){
 
 
 	/*! Upload selected mode */
-	SubSys_WirelessCom_Config_CNFG_MODE(dev);
+	SubSys_WirelessCom_Config_WORK_MODE(dev);
 
 	/*! Select parameters */
 	dev->param.SerialPortRate 		= UART_Rate_is_1200;
