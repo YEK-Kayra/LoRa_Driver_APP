@@ -176,10 +176,10 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 /*!**		REGISTER VARIABLES		**!*/
 
 	/*! For PARAMETER REG Bytes */
-	uint8_t     REG0; /* UART Serial Port Rate || Parity Bit || Air Data Rate */
-	uint8_t     REG1; /* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
-	uint8_t     REG2; /* Channel  */
-	uint8_t     REG3; /* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
+	uint8_t     REG0; 				/* UART Serial Port Rate || Parity Bit || Air Data Rate */
+	uint8_t     REG1;			 	/* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
+	uint8_t     REG2; 				/* Channel  */
+	uint8_t     REG3; 				/* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
 
 	/*For CRYPTO REG HIGH & LOW Bytes */
 	uint8_t   	REG_CRYPT_H;
@@ -198,39 +198,39 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 
 /**
   * @brief 	Configure parameters of ragisters, call sub function to write&read value to&from registers
-  * @note  	User juct can create an object name like WirelessCom and send into this function by its address.
-  * @param	*dev is an pointer that hold object address that create by user. All of configuration ops. is working by this pointer
+  * @note
+  * @param	*dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
   * @retval	currently empty
   */
 void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *dev);
 
 
 /**
-  * @brief
+  * @brief Sets the selected parameter and sends it to the wireless communication device
   * @note
-  * @param
-  * @retval
+  * @param *dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
+  * @retval NONE
   */
 void SubSys_WirelessCom_Config_SET_REG(SubSys_WirelesscomConfig_HandleTypeDef   *dev);
 
 
 /**
-  * @brief
-  * @note
-  * @param
-  * @retval
+  * @brief Read configuration register's value and checks with the correct value,
+  * 	    If there is an error stop the algorithm and lock it
+  * @note	An error logger will be added soon
+  * @param *dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
+  * @retval NONE
   */
 void SubSys_WirelessCom_Config_READ_REG(SubSys_WirelesscomConfig_HandleTypeDef  *dev);
 
 
 /**
-  * @brief
+  * @brief Selects work mode like transparent transmission, wor communication and deep sleep
   * @note
-  * @param
-  * @retval
+  * @param *dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
+  * @retval NONE
   */
 void SubSys_WirelessCom_Config_WORK_MODE(SubSys_WirelesscomConfig_HandleTypeDef   *dev);
-
 
 
 #endif /* SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_ */

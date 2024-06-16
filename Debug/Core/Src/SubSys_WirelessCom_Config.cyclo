@@ -1,4 +1,4 @@
 ../Core/Src/SubSys_WirelessCom_Config.c:8:6:SubSys_WirelessCom_Config_Init	1
-../Core/Src/SubSys_WirelessCom_Config.c:45:6:SubSys_WirelessCom_Config_SET_REG	1
-../Core/Src/SubSys_WirelessCom_Config.c:68:6:SubSys_WirelessCom_Config_READ_REG	3
-../Core/Src/SubSys_WirelessCom_Config.c:98:6:SubSys_WirelessCom_Config_WORK_MODE	5
+../Core/Src/SubSys_WirelessCom_Config.c:48:6:SubSys_WirelessCom_Config_SET_REG	1
+../Core/Src/SubSys_WirelessCom_Config.c:71:6:SubSys_WirelessCom_Config_READ_REG	3
+../Core/Src/SubSys_WirelessCom_Config.c:101:6:SubSys_WirelessCom_Config_WORK_MODE	5

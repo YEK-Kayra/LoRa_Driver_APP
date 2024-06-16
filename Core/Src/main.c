@@ -120,13 +120,13 @@ int main(void)
 		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_APP_H_
 
 		  /*! Will be filled for your dev that use now*/
-		  dev_WirelessComApp->huartX = &huart1;
-		  dev_WirelessComApp->hdma_usartX_rx = &hdma_usart1_rx;
-		  dev_WirelessComApp->hdma_usartX_tx = &hdma_usart1_tx;
+		  dev_WirelessComApp.huartX = &huart1;
+		  dev_WirelessComApp.hdma_usartX_rx = &hdma_usart1_rx;
+		  dev_WirelessComApp.hdma_usartX_tx = &hdma_usart1_tx;
 		  /*! Will be filled for the TARGET Device */
-		  dev_WirelessComApp->Target_ADDH = 0x14;
-		  dev_WirelessComApp->Target_ADDL = 0x53;
-		  dev_WirelessComApp->Target_Ch   = 0x22;
+		  dev_WirelessComApp.Target_ADDH = 0x14;
+		  dev_WirelessComApp.Target_ADDL = 0x53;
+		  dev_WirelessComApp.Target_Ch   = 0x22;
 
 		#endif
   /* WIRELESS COMMUNICATION INITIALIZE PART END*/
@@ -139,7 +139,38 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  //while sonunda taşıyıcı gönderim yapacak sadece,
+	  //while sonunda payload gönderim yapacak sadece ama arka planda veri gelirse ya interrupt ile hızlıca alacak(taşıycı ya da istasyon) ki
+	  // veri alımı için istasyon 1 numaralı öncelik olamlı taşıyıcı 2 numaralı öncelik olmalı , veri gelince interruptı bulaştırmadan dma üzerinden akıp akmadığını kontrol edeceğiz
+
+
+	  //İstasyon ise veri geldikçe kesmeye girecek veriyi alacak interrupt dma kullan , herhangi bir whilede olmayacak,
+	  // ama komut gönderilirmek istenirse kesmeye gidip komutu hızlıca halletmesi lazım
+
+	  /**
+	   * Özet olarak  taşıyıcıdan görevyüküne olann kodlarda sadece whilede döngü sonunda wireless_transmit fonkyonu çalışmalı
+	   * bu klasörü taşıyıcı kodundaymış gibi düşün , daha sonra payload açıkmış gibi düşünülecek
+	   */
+
+	  // örnek  taşıyıcı için kodu için
+
+	  // fonk1_ms5611 verilerini al
+	  // fonk2_batarya verilerini al
+	  // fonk3_gps verilerini al
+	  // fonk4_filtreleme yap
+	  // fonk5_sd kart içine kaydet
+	  // 1 saniye kadar bekle
+	  // fonk6_lora verileri karşı hedefe gönder
+	  /**
+	   * fonk6_lora için neler kullanılacak hangi değişkenler rol oynayacak
+	   *
+	   *
+	   */
+	  SubSys_WirelessCom_Telemetry_Transfer_From_To(Sat_Carrier, Sat_Payload, &dev_WirelessComApp);
     /* USER CODE END WHILE */
+
+
 
     /* USER CODE BEGIN 3 */
   }
