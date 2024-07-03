@@ -1208,10 +1208,10 @@ Disassembly of section .text:
  8000eb2:	bf00      	nop
 
 08000eb4 <SubSys_WirelessCom_Telemetry_Transfer_From_To>:
-  * 		When TX buffer is fulfilled , it is sent by UART interface.
-  * @note  Follow the transmitting rules, each if and else if has a why head for using
-  * @param
-  * @retval
+  * 																 	  @arg 1 : Sat_Payload
+  * 																  	  @arg 2 : Ground_Sation
+  * @param SubSys_WirelessCom_APP_HandleTypeDef *dev_WirelessComApp , created object for wireless communication
+  * @retval NONE
   */
 void SubSys_WirelessCom_Telemetry_Transfer_From_To(MissionUnit From_X, MissionUnit To_Y, SubSys_WirelessCom_APP_HandleTypeDef *dev_WirelessComApp){
  8000eb4:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
@@ -1766,10 +1766,10 @@ void SubSys_WirelessCom_Telemetry_Transfer_From_To(MissionUnit From_X, MissionUn
  800138c:	200001f0 	.word	0x200001f0
 
 08001390 <SubSys_WirelessCom_Telemetry_Create_Packet_For>:
- * @param  : MissionUnit x, Packet type used for your specific purpose @arg 0 : Sat_Carrier
  * 																	   @arg 1 : Sat_Payload
  * 																	   @arg 2 : Ground_Sation
  * @param  : SubSys_WirelessCom_APP_HandleTypeDef *dev_WirelessComApp , created object for wireless communication
+ * @retval NONE
  */
 void SubSys_WirelessCom_Telemetry_Create_Packet_For(MissionUnit x,SubSys_WirelessCom_APP_HandleTypeDef *dev_WirelessComApp){
  8001390:	b480      	push	{r7}
@@ -1879,9 +1879,9 @@ void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *d
  8001446:	f000 f873 	bl	8001530 <SubSys_WirelessCom_Config_WORK_MODE>
 
 	/*! Select parameters */
-	dev->param.SerialPortRate 		= UART_Rate_is_1200;
+	dev->param.SerialPortRate 		= UART_Rate_is_9600;
  800144a:	687b      	ldr	r3, [r7, #4]
- 800144c:	2200      	movs	r2, #0
+ 800144c:	2203      	movs	r2, #3
  800144e:	701a      	strb	r2, [r3, #0]
 	dev->param.ParityBit 			= p8N1;
  8001450:	687b      	ldr	r3, [r7, #4]
@@ -2215,9 +2215,9 @@ int main(void)
  8001636:	4b08      	ldr	r3, [pc, #32]	; (8001658 <main+0x60>)
  8001638:	2253      	movs	r2, #83	; 0x53
  800163a:	f883 221d 	strb.w	r2, [r3, #541]	; 0x21d
-		  dev_WirelessComApp.Target_Ch   = 0x22;
+		  dev_WirelessComApp.Target_Ch   = 0x29;
  800163e:	4b06      	ldr	r3, [pc, #24]	; (8001658 <main+0x60>)
- 8001640:	2222      	movs	r2, #34	; 0x22
+ 8001640:	2229      	movs	r2, #41	; 0x29
  8001642:	f883 221e 	strb.w	r2, [r3, #542]	; 0x21e
 	  /**
 	   * fonk6_lora için neler kullanılacak hangi değişkenler rol oynayacak

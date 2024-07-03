@@ -13,7 +13,7 @@ void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *d
 	SubSys_WirelessCom_Config_WORK_MODE(dev);
 
 	/*! Select parameters */
-	dev->param.SerialPortRate 		= UART_Rate_is_1200;
+	dev->param.SerialPortRate 		= UART_Rate_is_9600;
 	dev->param.ParityBit 			= p8N1;
 	dev->param.AirDataRate    		= Air_Data_Rate_2d_4k;
 

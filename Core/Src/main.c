@@ -126,7 +126,7 @@ int main(void)
 		  /*! Will be filled for the TARGET Device */
 		  dev_WirelessComApp.Target_ADDH = 0x14;
 		  dev_WirelessComApp.Target_ADDL = 0x53;
-		  dev_WirelessComApp.Target_Ch   = 0x22;
+		  dev_WirelessComApp.Target_Ch   = 0x29;
 
 		#endif
   /* WIRELESS COMMUNICATION INITIALIZE PART END*/
@@ -139,6 +139,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  //HAL_UART_RxCpltCallback GELİNCE İNTERRUPTA SOKUP VERİYİ BİR BASACAN KARŞIYAA
 
 	  //while sonunda taşıyıcı gönderim yapacak sadece,
 	  //while sonunda payload gönderim yapacak sadece ama arka planda veri gelirse ya interrupt ile hızlıca alacak(taşıycı ya da istasyon) ki

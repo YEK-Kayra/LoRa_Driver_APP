@@ -147,6 +147,8 @@ void SubSys_WirelessCom_Telemetry_Reception_From_To(MissionUnit From_X, MissionU
 
 	if(From_X == Sat_Carrier && To_Y == Sat_Payload){ // just for  Payload
 
+
+
 	}
 	else if(From_X == Sat_Payload && To_Y == Sat_Carrier){ // just for Carrier
 
