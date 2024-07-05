@@ -43,7 +43,6 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
-DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE BEGIN PV */
 
@@ -102,34 +101,49 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  /* WIRELESS COMMUNICATION INITIALIZE PART BEGIN*/
+  /*-------------WIRELESS COMMUNICATION INITIALIZE PART BEGIN----------------*/
 
-		  /**
-		   * @brief : First of all, we upload initial settings into the Wireless com. device
-		   * 		  after that, we determine Target Address high and low byte and Target Channel.
-		   * @note  : If you use dma for receiving and transmiting, fill it parameters that
-		   * 		  come after channel info
-		   */
-		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_
+  	  /**
+  	   * @brief : First of all, we upload initial settings into the wireless communication device.
+  	   * 		  After that, we determine Target Address high and low byte and Target Channel.
+  	   * 		  Some LoRa module has two pin as named M0 and M1. These provides selecting working mode
+  	   * 		  For E220400T30 are M0 and M1 pins.
+  	   * @note  : If you use dma for receiving and transmiting, fill it parameters that
+  		  		  come after channel info
+  	   */
+    		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_CONFIG_H_
 
-		  SubSys_WirelessCom_Config_Init(&dev_WirelessComConfig);
+    	  	  dev_WirelessComConfig.interface.huart = &huart1;
+    	  	  dev_WirelessComConfig.interface.GPIOx = GPIOA;
+    	  	  dev_WirelessComConfig.LORA_PIN_M0= GPIO_PIN_12;
+    	  	  dev_WirelessComConfig.LORA_PIN_M1= GPIO_PIN_11;
+    	  	  dev_WirelessComConfig.Mode_SW = DeepSleep; 		/*! Module goes to sleep, that provides you to configure settings */
+    	  	  dev_WirelessComConfig.interface.hdma_usart_rx = &hdma_usart1_rx;
 
-		#endif
+    	  	  //HAL_UARTEx_ReceiveToIdle_DMA(dev_WirelessComConfig.interface.huart, ParamsLoraToBeGet, sizeof(ParamsLoraToBeGet));
 
 
-		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_APP_H_
+    		  SubSys_WirelessCom_Config_Init(&dev_WirelessComConfig);
 
-		  /*! Will be filled for your dev that use now*/
-		  dev_WirelessComApp.huartX = &huart1;
-		  dev_WirelessComApp.hdma_usartX_rx = &hdma_usart1_rx;
-		  dev_WirelessComApp.hdma_usartX_tx = &hdma_usart1_tx;
-		  /*! Will be filled for the TARGET Device */
-		  dev_WirelessComApp.Target_ADDH = 0x14;
-		  dev_WirelessComApp.Target_ADDL = 0x53;
-		  dev_WirelessComApp.Target_Ch   = 0x29;
+    		#endif
 
-		#endif
-  /* WIRELESS COMMUNICATION INITIALIZE PART END*/
+
+
+  //  		#ifdef SAT_PERIPHERALS_LIB_INC_SUBSYS_WIRELESSCOM_APP_H_
+  //
+  //  		  /*! Will be filled for your dev that use now*/
+  //  		  dev_WirelessComApp.huartX = &huart1;
+  //		  dev_WirelessComConfig.Mode_SW = NormalMode; 		/*! UART and wireless channel are open, transparent transmission is on*/
+  //		  SubSys_WirelessCom_Config_WORK_MODE(&dev_WirelessComConfig);
+  //
+  //  		  /*! Will be filled for the PAYLOAD(Target) Device */
+  //  		  dev_WirelessComApp.Target_ADDH = 0x14;
+  //  		  dev_WirelessComApp.Target_ADDL = 0x53;
+  //  		  dev_WirelessComApp.Target_Ch   = 0x22;
+  //
+  //  		#endif
+
+  /*-------------WIRELESS COMMUNICATION INITIALIZE PART END----------------*/
 
 
 
@@ -140,7 +154,7 @@ int main(void)
   while (1)
   {
 
-	  //HAL_UART_RxCpltCallback GELİNCE İNTERRUPTA SOKUP VERİYİ BİR BASACAN KARŞIYAA
+	  //HAL_UART_RxCpltCallback GELİNCE İNTERRUPTA SOKUP VERİYİ BİR BASACAN KAR�?IYAA
 
 	  //while sonunda taşıyıcı gönderim yapacak sadece,
 	  //while sonunda payload gönderim yapacak sadece ama arka planda veri gelirse ya interrupt ile hızlıca alacak(taşıycı ya da istasyon) ki
@@ -171,8 +185,6 @@ int main(void)
 	   */
 	  SubSys_WirelessCom_Telemetry_Transfer_From_To(Sat_Carrier, Sat_Payload, &dev_WirelessComApp);
     /* USER CODE END WHILE */
-
-
 
     /* USER CODE BEGIN 3 */
   }
@@ -241,7 +253,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -271,9 +283,6 @@ static void MX_DMA_Init(void)
   /* DMA2_Stream2_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
-  /* DMA2_Stream7_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
 
 }
 

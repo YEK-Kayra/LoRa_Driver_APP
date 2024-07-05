@@ -11,14 +11,14 @@
 /******************************************************************************
          				#### WIRELESSCOM INCLUDES ####
 ******************************************************************************/
-#include "SubSys_WirelessCom_App.h"
 #include "main.h"
+#include "SubSys_WirelessCom_App.h"
+
 
 
 /******************************************************************************
          				#### WIRELESSCOM ADDRESS DEFINATIONS ####
 ******************************************************************************/
-
 #define REG_BaseAddress	 0x00
 
 /******************************************************************************
@@ -81,8 +81,10 @@ typedef enum{
 
 
 typedef enum{
+
 	Transparent,
 	Fixed_t
+
 }dev_Transmission_Method;
 
 
@@ -95,6 +97,7 @@ typedef enum{
 
 
 typedef enum{
+
 	/*! ms is milisecond */
 	ms500,
 	ms1000,
@@ -118,15 +121,15 @@ typedef enum{
 
 typedef enum{
 
-	writeCmnd = 0xC0,
-	readCmnd  = 0xC1
+	writeCmnd = 0xC0,	/*! Write command*/
+	readCmnd  = 0xC1	/*! Read command */
 
 }dev_Command;
 
-/******************************************************************************
-         				#### WIRELESSCOM INCLUDES STRUCTURES ####
-******************************************************************************/
 
+/******************************************************************************
+         			#### WIRELESSCOM INCLUDES STRUCTURES ####
+******************************************************************************/
 typedef struct Wirelesscom_Params_t{
 
 	/*For REG0 Byte*/
@@ -140,7 +143,7 @@ typedef struct Wirelesscom_Params_t{
 	dev_Transmitting_Power	TX_Power;
 
 	/*For REG2 Byte*/
-	uint8_t dev_Channel;
+	uint8_t dev_Channel;			/*! Device that you use now, its channel parameter*/
 
 	/*For REG3 Byte*/
 	dev_SwithStatus RSSIByte_SW;
@@ -154,40 +157,41 @@ typedef struct Wirelesscom_Params_t{
 typedef struct dev_interfaces_t{
 
 	/*! System Peripheral interfaces */
-	UART_HandleTypeDef *huart;
-	GPIO_TypeDef* GPIOx;
+	UART_HandleTypeDef *huart;			/* For specify communication way*/
+	GPIO_TypeDef* GPIOx;				/* For specify working mode		*/
+	DMA_HandleTypeDef *hdma_usart_rx;	/* For getting data from chip*/
 
 }dev_interfaces_t;
 
+
 typedef struct WirelesscomConfig_HandleTypeDef{
 
-	/*! Inner structs */
-	Wirelesscom_Params_t param;
-	dev_interfaces_t 	 interface;
 
-	/**
-	 * Lora M0 and M1 control pins and Normal, WOR, Sleep mode swtich
-	 */
-	uint16_t LORA_PIN_M0;
-	uint16_t LORA_PIN_M1;
-	dev_Mode_Switch Mode_SW;
+	/*----------------Inner structs and variables--------------------*/
+		dev_interfaces_t 	 interface;		/* Identfy GPIOs and UART handles*/
+		Wirelesscom_Params_t param;			/* Choose LoRa parameters		 */
+		dev_Mode_Switch Mode_SW;			/* Choose LoRa working modes	 */
+
+		/*! Lora M0 and M1 control pins */
+		uint16_t LORA_PIN_M0;
+		uint16_t LORA_PIN_M1;
 
 
-/*!**		REGISTER VARIABLES		**!*/
+	/*---------------------REGISTER VARIABLES ------------------------*/
 
-	/*! For PARAMETER REG Bytes */
-	uint8_t     REG0; 				/* UART Serial Port Rate || Parity Bit || Air Data Rate */
-	uint8_t     REG1;			 	/* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
-	uint8_t     REG2; 				/* Channel  */
-	uint8_t     REG3; 				/* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
+		/*! For PARAMETER REG Bytes */
+		uint8_t     REG0; 				/* UART Serial Port Rate || Parity Bit || Air Data Rate */
+		uint8_t     REG1;			 	/* SubPacket_Setting || RSSI_Ambient_Noise_Enable || Transmitting_Power  */
+		uint8_t     REG2; 				/* Channel  */
+		uint8_t     REG3; 				/* RSSI_Byte_Enable || Transmission_Method || LBT_Enable || WOR_Cycle */
 
-	/*For CRYPTO REG HIGH & LOW Bytes */
-	uint8_t   	REG_CRYPT_H;
-	uint8_t   	REG_CRYPT_L;
+		/*For CRYPTO REG HIGH & LOW Bytes */
+		uint8_t   	REG_CRYPT_H;
+		uint8_t   	REG_CRYPT_L;
 
-	/*! For ADDRESS REG HIGH & LOW Bytes */
-	uint8_t 	ADDH;
-	uint8_t     ADDL;
+		/*! Device you use now, For ADDRESS REG HIGH & LOW Bytes */
+		uint8_t 	ADDH;
+		uint8_t     ADDL;
 
 }SubSys_WirelesscomConfig_HandleTypeDef;
 
@@ -197,19 +201,21 @@ typedef struct WirelesscomConfig_HandleTypeDef{
 ******************************************************************************/
 
 /**
-  * @brief 	Configure parameters of ragisters, call sub function to write&read value to&from registers
+  * @brief 	Configure parameters of ragisters, call sub function to write&read values (to&from)registers
   * @note
-  * @param	*dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
-  * @retval	currently empty
+  * @param	*dev, is a pointer that hold object address that create by user.
+  * 			  All of configuration ops. is working by this pointer.
+  * @retval	void
   */
 void SubSys_WirelessCom_Config_Init(SubSys_WirelesscomConfig_HandleTypeDef    *dev);
 
 
 /**
-  * @brief Sets the selected parameter and sends it to the wireless communication device
+  * @brief Sets the selected parameter and sends them to the LoRa wireless communication device
   * @note
-  * @param *dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
-  * @retval NONE
+  * @param *dev, is a pointer that hold object address that create by user.
+  * 			 All of configuration ops. is working by this pointer.
+  * @retval void
   */
 void SubSys_WirelessCom_Config_SET_REG(SubSys_WirelesscomConfig_HandleTypeDef   *dev);
 
@@ -218,17 +224,19 @@ void SubSys_WirelessCom_Config_SET_REG(SubSys_WirelesscomConfig_HandleTypeDef   
   * @brief Read configuration register's value and checks with the correct value,
   * 	    If there is an error stop the algorithm and lock it
   * @note	An error logger will be added soon
-  * @param *dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
-  * @retval NONE
+  * @param *dev, is a pointer that hold object address that create by user.
+  * 			 All of configuration ops. is working by this pointer
+  * @retval void
   */
 void SubSys_WirelessCom_Config_READ_REG(SubSys_WirelesscomConfig_HandleTypeDef  *dev);
 
 
 /**
-  * @brief Selects work mode like transparent transmission, wor communication and deep sleep
+  * @brief Selects work mode such as transparent transmission, WOR (wake-on-radio) communication, and deep sleep
   * @note
-  * @param *dev, is a pointer that hold object address that create by user. All of configuration ops. is working by this pointer
-  * @retval NONE
+  * @param *dev, is a pointer that hold object address that create by user.
+  * 			 All of configuration ops. is working by this pointer.
+  * @retval void
   */
 void SubSys_WirelessCom_Config_WORK_MODE(SubSys_WirelesscomConfig_HandleTypeDef   *dev);
 
