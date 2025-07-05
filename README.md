@@ -12,6 +12,6 @@ This subsystem provides wireless communication functionality using LoRa technolo
 The implementation includes configuration, packet creation, and transmission/reception handling for telemetry data between these units.
 
 ## Hardware Configuration
-
+<img width="492" height="185" alt="Image" src="https://github.com/user-attachments/assets/db867117-bcf7-435a-9524-47b240998278" />
 
 
